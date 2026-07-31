@@ -358,6 +358,63 @@ td.expense { color: #dc3545; font-weight: bold; }
     justify-content: center;
     text-transform: uppercase;
 }
+/* Asegurar que los inputs dentro de tablas o contenedores móviles no se salgan */
+/* .pending-card input[type="number"], 
+.transactions-table input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+} */
+
+/* Estilo para las secciones desplegables */
+details.collapsible-section {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+details.collapsible-section summary {
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+details.collapsible-section summary::-webkit-details-marker {
+    display: none; /* Oculta la flecha por defecto en Chrome/Safari */
+}
+
+/* Flechita personalizada elegante */
+details.collapsible-section summary::after {
+    content: '▼';
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+    color: #666;
+}
+
+details.collapsible-section[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.summary-badge {
+    background-color: #f0f2f5;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: normal;
+}
+
+/* Solución para que el input de pendientes no se salga en celular */
+.pending-input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
 
 /* Solo se muestra en pantallas chicas (celulares) */
 @media (max-width: 768px) {

@@ -2,34 +2,38 @@
 
 <div class="dashboard-container">
 
-<!-- Alertas de Fijos Pendientes -->
-<!-- Alertas de Fijos Pendientes -->
+    <!-- Alertas de Fijos Pendientes (Desplegable) -->
     <% if (pendingExpenses && pendingExpenses.length > 0) { %>
-        <section class="alert-section">
-            <h3>⚠️ Movimientos Fijos Pendientes</h3>
-            <div class="pending-list">
-                <% pendingExpenses.forEach(expense => { %>
-                    <div class="pending-card" style="display: flex; flex-direction: column; gap: 12px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; background: #fff;">
-                        
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <strong style="font-size: 1rem;"><%= expense.title %></strong> 
-                            <span class="badge <%= expense.type === 'income' ? 'income' : 'expense' %>">
-                                <%= expense.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>
-                            </span>
-                        </div>
-                        
-                        <!-- Formulario adaptativo (flex-direction: column en celu, row en PC) -->
-                        <form action="/dashboard/pay/<%= expense.id %>" method="POST" class="pending-form">
-                            <input type="number" step="1" name="amount" value="<%= (expense.amount && parseFloat(expense.amount) > 0) ? Math.round(expense.amount) : '' %>" placeholder="Monto real ($)" required class="pending-input">
+        <details class="collapsible-section" >
+            <summary>
+                <span>⚠️ Movimientos Fijos Pendientes</span>
+                <span class="summary-badge">Tienes <%= pendingExpenses.length %> pendientes</span>
+            </summary>
+            <div style="margin-top: 15px;">
+                <div class="pending-list">
+                    <% pendingExpenses.forEach(expense => { %>
+                        <div class="pending-card" style="display: flex; flex-direction: column; gap: 12px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; background: #fff;">
                             
-                            <button type="submit" class="btn-pay <%= expense.type === 'income' ? 'btn-income-pay' : 'btn-expense-pay' %>">
-                                <%= expense.type === 'income' ? 'Confirmar Cobro' : 'Confirmar Pago' %>
-                            </button>
-                        </form>
-                    </div>
-                <% }) %>
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <strong style="font-size: 1rem;"><%= expense.title %></strong> 
+                                <span class="badge <%= expense.type === 'income' ? 'income' : 'expense' %>">
+                                    <%= expense.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>
+                                </span>
+                            </div>
+                            
+                            <!-- Formulario adaptativo -->
+                            <form action="/dashboard/pay/<%= expense.id %>" method="POST" class="pending-form">
+                                <input type="number" step="1" name="amount" value="<%= (expense.amount && parseFloat(expense.amount) > 0) ? Math.round(expense.amount) : '' %>" placeholder="Monto real ($)" required class="pending-input">
+                                
+                                <button type="submit" class="btn-pay <%= expense.type === 'income' ? 'btn-income-pay' : 'btn-expense-pay' %>">
+                                    <%= expense.type === 'income' ? 'Confirmar Cobro' : 'Confirmar Pago' %>
+                                </button>
+                            </form>
+                        </div>
+                    <% }) %>
+                </div>
             </div>
-        </section>
+        </details>
     <% } %>
 
     <!-- Tarjetas de Resumen -->
@@ -104,54 +108,59 @@
         </form>
     </section>
 
-    <!-- Listado de Transacciones -->
-    <section class="transactions-section">
-        <h2>Movimientos del Mes</h2>
-        <% if (transactions && transactions.length > 0) { %>
-            <div class="table-responsive">
-                <table class="transactions-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Concepto</th>
-                            <th>Tipo</th>
-                            <th>Monto</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% transactions.forEach(t => { %>
+    <!-- Listado de Transacciones (Desplegable) -->
+    <details class="collapsible-section" >
+        <summary>
+            <span>📋 Movimientos del Mes</span>
+            <span class="summary-badge">Se registraron <%= transactions.length %> movimientos</span>
+        </summary>
+        <div style="margin-top: 15px;">
+            <% if (transactions && transactions.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="transactions-table">
+                        <thead>
                             <tr>
-                                <td><%= new Date(t.date).toLocaleDateString() %></td>
-                                <td><%= t.title %></td>
-                                <td><span class="badge <%= t.type %>"><%= t.type === 'income' ? 'Ingreso' : 'Gasto' %></span></td>
-                                <td class="<%= t.type %>">
-                                    <%= (t.amount !== null && !isNaN(t.amount)) ? '$' + Math.round(t.amount) : 'Pendiente de monto' %>
-                                </td>
-                                <td>
-                                    <% if (t.status === 'pending') { %>
-                                        <span class="badge-fixed pending">Pendiente</span>
-                                    <% } else { %>
-                                        <span class="badge-fixed paid">
-                                            <%= t.type === 'income' ? 'Cobrado' : 'Pagado' %>
-                                        </span>
-                                    <% } %>
-                                </td>
-                                <td>
-                                    <form action="/dashboard/delete/<%= t.id %>" method="POST" style="display:inline;">
-                                        <button type="submit" class="btn-delete" onclick="return confirm('¿Borrar?')">🗑️</button>
-                                    </form>
-                                </td>
+                                <th>Fecha</th>
+                                <th>Concepto</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
                             </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            </div>
-        <% } else { %>
-            <p class="no-data">No hay movimientos este mes.</p>
-        <% } %>
-    </section>
+                        </thead>
+                        <tbody>
+                            <% transactions.forEach(t => { %>
+                                <tr>
+                                    <td><%= new Date(t.date).toLocaleDateString() %></td>
+                                    <td><%= t.title %></td>
+                                    <td><span class="badge <%= t.type %>"><%= t.type === 'income' ? 'Ingreso' : 'Gasto' %></span></td>
+                                    <td class="<%= t.type %>">
+                                        <%= (t.amount !== null && !isNaN(t.amount)) ? '$' + Math.round(t.amount) : 'Pendiente de monto' %>
+                                    </td>
+                                    <td>
+                                        <% if (t.status === 'pending') { %>
+                                            <span class="badge-fixed pending">Pendiente</span>
+                                        <% } else { %>
+                                            <span class="badge-fixed paid">
+                                                <%= t.type === 'income' ? 'Cobrado' : 'Pagado' %>
+                                            </span>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <form action="/dashboard/delete/<%= t.id %>" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn-delete" onclick="return confirm('¿Borrar?')">🗑️</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="no-data" style="margin-top: 10px;">No hay movimientos este mes.</p>
+            <% } %>
+        </div>
+    </details>
 </div>
 
 <!-- Cargar Chart.js desde CDN -->
