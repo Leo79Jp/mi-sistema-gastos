@@ -5,6 +5,9 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   // Si usas proveedores cloud como Supabase o Neon, a veces requieren SSL:
   // ssl: { rejectUnauthorized: false } 
+    ssl: {
+    rejectUnauthorized: false // Necesario para bases de datos en la nube como Neon o Supabase
+  }
 });
 
 pool.on('connect', () => {
@@ -12,3 +15,5 @@ pool.on('connect', () => {
 });
 
 module.exports = pool;
+
+
