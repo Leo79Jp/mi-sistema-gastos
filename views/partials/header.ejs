@@ -47,14 +47,28 @@
     </div>
 </nav>
 
-<!-- Script sencillo para abrir y cerrar el menú hamburguesa en celular -->
+<!-- Script mejorado para abrir y cerrar el menú hamburguesa en celular y PC -->
 <script>
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const navLinks = document.getElementById('navLinks');
 
     if (hamburgerBtn && navLinks) {
-        hamburgerBtn.addEventListener('click', () => {
+        // Usamos una función para alternar la clase
+        function toggleMenu(e) {
+            e.preventDefault(); // Evita comportamientos extraños de doble toque en móviles
+            e.stopPropagation();
             navLinks.classList.toggle('active');
+        }
+
+        // Escuchamos tanto el 'click' como el 'touchstart' para respuesta inmediata en táctil
+        hamburgerBtn.addEventListener('click', toggleMenu);
+        hamburgerBtn.addEventListener('touchstart', toggleMenu, { passive: false });
+
+        // Opcional: cerrar el menú si se hace clic fuera de él en la pantalla
+        document.addEventListener('click', (e) => {
+            if (!hamburgerBtn.contains(e.target) && !navLinks.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
         });
     }
 </script>
