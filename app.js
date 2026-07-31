@@ -38,10 +38,7 @@ app.use(
   })
 );
 
-// Ruta de prueba temporal
-app.get('/', (req, res) => {
-  res.send('¡Servidor funcionando y listo para las vistas EJS!');
-});
+
 // ... (más abajo, junto a los middlewares)
 app.use('/auth', authRoutes);
 // Usar rutas (puedes ponerlo que responda en /dashboard)
