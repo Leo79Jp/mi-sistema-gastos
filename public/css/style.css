@@ -337,7 +337,34 @@ td.expense { color: #dc3545; font-weight: bold; }
 .mobile-text {
     display: none;
 }
+/* Contenedor para alinear la inicial y el botón hamburguesa en celular */
+.nav-right-mobile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
+/* Círculo estilo "avatar" con la inicial del usuario */
+.user-initial-badge {
+    display: none; /* Oculto en PC porque en PC ya se muestra el mail entero */
+    background-color: #007bff; /* Color de fondo del círculo (puedes cambiarlo) */
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9rem;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+}
+
+/* Solo se muestra en pantallas chicas (celulares) */
+@media (max-width: 768px) {
+    .user-initial-badge {
+        display: flex; /* Se muestra al entrar en modo celular */
+    }
+}
 /* Media Queries para PC (Pantallas Grandes) */
 @media (min-width: 768px) {
     .dashboard-container {

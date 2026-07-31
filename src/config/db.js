@@ -1,19 +1,12 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// Si estamos en producción (Vercel), activamos SSL; si estamos en local, no.
+const isProduction = process.env.NODE_ENV === 'production';
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  // Si usas proveedores cloud como Supabase o Neon, a veces requieren SSL:
-  // ssl: { rejectUnauthorized: false } 
-    ssl: {
-    rejectUnauthorized: false // Necesario para bases de datos en la nube como Neon o Supabase
-  }
-});
-
-pool.on('connect', () => {
-  console.log('Base de datos conectada exitosamente');
+  ssl: isProduction ? { rejectUnauthorized: false } : false
 });
 
 module.exports = pool;
-
-
