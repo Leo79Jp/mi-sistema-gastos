@@ -472,6 +472,7 @@ details.collapsible-section[open] summary::after {
 
     .nav-links.active {
         display: flex;
+        flex-direction: column;
     }
 
     .nav-brand {
