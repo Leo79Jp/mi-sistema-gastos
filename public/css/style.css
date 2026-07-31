@@ -1,0 +1,436 @@
+/* Layout general para mantener el footer abajo */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px 0;
+}
+
+/* Navbar Base */
+.navbar {
+    background-color: #333;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nav-brand a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-user {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.nav-link:hover { background-color: rgba(255,255,255,0.2); }
+
+.btn-logout {
+    background-color: #dc3545;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+.btn-logout:hover { background-color: #c82333; }
+
+/* Footer */
+.footer {
+    background-color: #212529;
+    color: #adb5bd;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 13px;
+    border-top: 2px solid #343a40;
+    width: 100%;
+}
+.footer p { margin: 0; }
+
+/* Contenedor Principal */
+.dashboard-container {
+    width: 92%;
+    max-width: 900px;
+    margin: 15px auto;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+}
+
+/* Alertas, Tarjetas y Formularios */
+.alert-section {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.pending-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 4px;
+    border-left: 4px solid #ffc107;
+}
+.btn-pay {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-pay:hover { background-color: #218838; }
+
+.summary-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.card {
+    flex: 1;
+    padding: 15px;
+    border-radius: 6px;
+    color: white;
+    text-align: center;
+}
+.card.income { background-color: #28a745; }
+.card.expense { background-color: #dc3545; }
+.card.balance.positive { background-color: #007bff; }
+.card.balance.negative { background-color: #ffc107; color: #333; }
+.card h3 { margin: 0 0 5px 0; font-size: 15px; }
+.card p { margin: 0; font-size: 22px; font-weight: bold; }
+
+.form-section, .transactions-section {
+    margin-bottom: 25px;
+}
+.transaction-form {
+    background: #fdfdfd;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+}
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.form-row input, .form-row select {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.options-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+}
+.btn-submit {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+}
+.btn-submit:hover { background-color: #0056b3; }
+
+/* Tabla */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.transactions-table th, .transactions-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    font-size: 14px;
+}
+.badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: white;
+}
+.badge.income { background-color: #28a745; }
+.badge.expense { background-color: #dc3545; }
+td.income { color: #28a745; font-weight: bold; }
+td.expense { color: #dc3545; font-weight: bold; }
+
+.badge-fixed {
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+.badge-fixed.pending { background-color: #ffc107; color: #333; }
+.badge-fixed.paid { background-color: #d4edda; color: #155724; }
+
+.btn-delete {
+    background-color: #e2e8f0;
+    color: #e53e3e;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-delete:hover { background-color: #fed7d7; }
+.no-data { color: #777; font-style: italic; }
+
+/* Estilos de Login y Registro */
+.auth-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f7f6;
+    margin: 0;
+}
+.auth-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+}
+.auth-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+.auth-form label {
+    font-size: 14px;
+    color: #555;
+}
+.auth-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.btn-auth {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+.btn-auth:hover { background-color: #0056b3; }
+.auth-links {
+    margin-top: 15px;
+    font-size: 14px;
+}
+.auth-links a {
+    color: #007bff;
+    text-decoration: none;
+}
+.auth-links a:hover { text-decoration: underline; }
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border: 1px solid #f5c6cb;
+}
+
+/* Botones de Pago Personalizados */
+.btn-income-pay {
+    background-color: #707972;
+    color: white;
+}
+.btn-income-pay:hover { background-color: #4d554f; }
+
+.btn-expense-pay {
+    background-color: #707972;
+    color: white;
+}
+.btn-expense-pay:hover { background-color: #4d554f; }
+
+/* Formulario de Pendientes Adaptativo */
+.pending-form {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+.pending-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    min-width: 0;
+}
+
+/* Botón Hamburguesa */
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+.mobile-text {
+    display: none;
+}
+
+/* Media Queries para PC (Pantallas Grandes) */
+@media (min-width: 768px) {
+    .dashboard-container {
+        max-width: 1100px; 
+        margin: 30px auto;
+        padding: 30px;
+    }
+    .summary-cards {
+        flex-direction: row; 
+    }
+    .form-row {
+        flex-direction: row; 
+    }
+    .nav-user {
+        display: inline; 
+    }
+}
+
+/* Ajustes Responsivos para Celulares (max-width: 768px) */
+@media (max-width: 768px) {
+    .navbar {
+        position: relative;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+    }
+
+    .hamburger-btn {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #333;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px;
+        box-sizing: border-box;
+        gap: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-brand {
+        text-align: left;
+    }
+
+    .nav-brand a {
+        font-size: 1.1rem;
+    }
+
+    .nav-link, .btn-logout {
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+
+    .nav-user {
+        text-align: center;
+        padding: 4px 0;
+        color: #ccc;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin-top: 5px;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    .desktop-text {
+        display: none;
+    }
+    
+    .mobile-text {
+        display: inline;
+    }
+
+    .pending-form {
+        flex-direction: column;
+    }
+    
+    .pending-input, .btn-pay {
+        width: 100%;
+    }
+}

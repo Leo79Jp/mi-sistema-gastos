@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Gastos</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Navbar Superior -->
+<nav class="navbar">
+    <div class="nav-brand">
+        <a href="/dashboard">💰 Control de Gastos</a>
+    </div>
+
+    <!-- Botón Hamburguesa (Solo se ve en celular) -->
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menú">
+        ☰
+    </button>
+    
+    <!-- Enlaces del menú -->
+    <div class="nav-links" id="navLinks">
+        <% if (locals.email) { %>
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/fixed-expenses" class="nav-link">Fijos</a>
+            <span class="nav-user"><%= email %></span>
+            <a href="/auth/logout" class="btn-logout">Salir</a>
+        <% } %>
+    </div>
+</nav>
+
+<!-- Script sencillo para abrir y cerrar el menú hamburguesa en celular -->
+<script>
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    if (hamburgerBtn && navLinks) {
+        hamburgerBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
+</script>
+
+    <!-- Contenedor Principal -->
+    <main class="main-content">

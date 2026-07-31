@@ -1,0 +1,242 @@
+<%- include('partials/header') %>
+
+<div class="dashboard-container">
+
+<!-- Alertas de Fijos Pendientes -->
+<!-- Alertas de Fijos Pendientes -->
+    <% if (pendingExpenses && pendingExpenses.length > 0) { %>
+        <section class="alert-section">
+            <h3>⚠️ Movimientos Fijos Pendientes</h3>
+            <div class="pending-list">
+                <% pendingExpenses.forEach(expense => { %>
+                    <div class="pending-card" style="display: flex; flex-direction: column; gap: 12px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; background: #fff;">
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <strong style="font-size: 1rem;"><%= expense.title %></strong> 
+                            <span class="badge <%= expense.type === 'income' ? 'income' : 'expense' %>">
+                                <%= expense.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>
+                            </span>
+                        </div>
+                        
+                        <!-- Formulario adaptativo (flex-direction: column en celu, row en PC) -->
+                        <form action="/dashboard/pay/<%= expense.id %>" method="POST" class="pending-form">
+                            <input type="number" step="1" name="amount" value="<%= (expense.amount && parseFloat(expense.amount) > 0) ? Math.round(expense.amount) : '' %>" placeholder="Monto real ($)" required class="pending-input">
+                            
+                            <button type="submit" class="btn-pay <%= expense.type === 'income' ? 'btn-income-pay' : 'btn-expense-pay' %>">
+                                <%= expense.type === 'income' ? 'Confirmar Cobro' : 'Confirmar Pago' %>
+                            </button>
+                        </form>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+    <% } %>
+
+    <!-- Tarjetas de Resumen -->
+    <section class="summary-cards">
+        <div class="card income">
+            <h3>Ingresos</h3>
+            <p>$<%= Math.round(totals.totalIncome) %></p>
+        </div>
+        <div class="card expense">
+            <h3>Gastos</h3>
+            <p>$<%= Math.round(totals.totalExpense) %></p>
+        </div>
+        <div class="card balance <%= totals.balance >= 0 ? 'positive' : 'negative' %>">
+            <h3>Balance</h3>
+            <p>$<%= Math.round(totals.balance) %></p>
+        </div>
+    </section>
+
+    <!-- Gráfico de Evolución -->
+    <section class="chart-section" style="background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 25px; border: 1px solid #eee;">
+        <h3 style="margin-top: 0; font-size: 16px; color: #444; text-align: center;">Evolución Financiera (Últimos Meses)</h3>
+        <div style="position: relative; height: 250px; width: 100%;">
+            <canvas id="financeChart" 
+                data-labels="<%= JSON.stringify(chart.labels) %>"
+                data-incomes="<%= JSON.stringify(chart.incomes) %>"
+                data-expenses="<%= JSON.stringify(chart.expenses) %>">
+            </canvas>
+        </div>
+    </section>
+
+    <!-- Formulario Inteligente (Variables o Fijos de la lista) -->
+    <section class="form-section">
+        <h2>Nuevo Movimiento</h2>
+        <form action="/dashboard/add" method="POST" class="transaction-form">
+            <div class="form-row">
+                <!-- Input libre para variables -->
+                <input type="text" name="title" id="titleInput" placeholder="Concepto (ej: Supermercado)" required>
+                
+                <!-- Desplegable para fijos preconfigurados -->
+                <select name="fixed_template_title" id="fixedSelect" style="display: none;">
+                    <option value="">Selecciona tu fijo preconfigurado...</option>
+                    <% if (fixedTemplates && fixedTemplates.length > 0) { %>
+                        <% fixedTemplates.forEach(template => { %>
+                            <option value="<%= template.title %>" data-amount="<%= template.amount %>" data-type="<%= template.type %>">
+                                <%= template.title %> ($<%= template.amount %> - <%= template.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>)
+                            </option>
+                        <% }) %>
+                    <% } %>
+                </select>
+
+                <input type="number" step="0.01" name="amount" id="amountInput" placeholder="Monto ($)" required>
+                
+                <select name="type" id="typeSelect" required>
+                    <option value="expense">Gasto</option>
+                    <option value="income">Ingreso</option>
+                </select>
+            </div>
+
+            <div class="form-row options-row">
+                <label>
+                    <input type="checkbox" name="is_fixed" id="isFixedCheckbox"> Usar de la lista fija preconfigurada
+                </label>
+                <div id="dueDateContainer" style="display: none;">
+                    <input type="date" name="due_date">
+                </div>
+                <div>
+                    <input type="date" name="date" value="<%= new Date().toISOString().split('T')[0] %>" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Guardar</button>
+        </form>
+    </section>
+
+    <!-- Listado de Transacciones -->
+    <section class="transactions-section">
+        <h2>Movimientos del Mes</h2>
+        <% if (transactions && transactions.length > 0) { %>
+            <div class="table-responsive">
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Tipo</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% transactions.forEach(t => { %>
+                            <tr>
+                                <td><%= new Date(t.date).toLocaleDateString() %></td>
+                                <td><%= t.title %></td>
+                                <td><span class="badge <%= t.type %>"><%= t.type === 'income' ? 'Ingreso' : 'Gasto' %></span></td>
+                                <td class="<%= t.type %>">
+                                    <%= (t.amount !== null && !isNaN(t.amount)) ? '$' + Math.round(t.amount) : 'Pendiente de monto' %>
+                                </td>
+                                <td>
+                                    <% if (t.status === 'pending') { %>
+                                        <span class="badge-fixed pending">Pendiente</span>
+                                    <% } else { %>
+                                        <span class="badge-fixed paid">
+                                            <%= t.type === 'income' ? 'Cobrado' : 'Pagado' %>
+                                        </span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <form action="/dashboard/delete/<%= t.id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn-delete" onclick="return confirm('¿Borrar?')">🗑️</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <p class="no-data">No hay movimientos este mes.</p>
+        <% } %>
+    </section>
+</div>
+
+<!-- Cargar Chart.js desde CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Inicializar Gráfico
+    const canvasElement = document.getElementById('financeChart');
+    if (canvasElement) {
+        const chartLabels = JSON.parse(canvasElement.dataset.labels || '[]');
+        const chartIncomes = JSON.parse(canvasElement.dataset.incomes || '[]');
+        const chartExpenses = JSON.parse(canvasElement.dataset.expenses || '[]');
+
+        const ctx = canvasElement.getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels,
+                datasets: [
+                    {
+                        label: 'Ingresos',
+                        data: chartIncomes,
+                        backgroundColor: 'rgba(40, 167, 69, 0.7)',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Gastos',
+                        data: chartExpenses,
+                        backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                        borderColor: 'rgba(220, 53, 69, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Intercambiar entre input libre y selector fijo
+    const typeSelect = document.getElementById('typeSelect');
+    const isFixedCheckbox = document.getElementById('isFixedCheckbox');
+    const dueDateContainer = document.getElementById('dueDateContainer');
+    const titleInput = document.getElementById('titleInput');
+    const fixedSelect = document.getElementById('fixedSelect');
+    const amountInput = document.getElementById('amountInput');
+
+    function updateOptions() {
+        if (isFixedCheckbox.checked) {
+            titleInput.style.display = 'none';
+            titleInput.removeAttribute('required');
+            
+            fixedSelect.style.display = 'block';
+            fixedSelect.setAttribute('required', 'true');
+        } else {
+            titleInput.style.display = 'block';
+            titleInput.setAttribute('required', 'true');
+            
+            fixedSelect.style.display = 'none';
+            fixedSelect.removeAttribute('required');
+            fixedSelect.value = '';
+        }
+    }
+
+    fixedSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const templateAmount = selectedOption.getAttribute('data-amount');
+            const templateType = selectedOption.getAttribute('data-type');
+            
+            if (templateAmount) amountInput.value = templateAmount;
+            if (templateType) typeSelect.value = templateType;
+        }
+    });
+
+    isFixedCheckbox.addEventListener('change', updateOptions);
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,33 @@
+mi-sistema-gastos/
+│
+├── public/                 # Archivos estáticos (CSS, JS del cliente, imágenes)
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│
+├── views/                  # Vistas EJS
+│   ├── partials/           # Componentes reutilizables (navbar, footer, head)
+│   │   ├── header.ejs
+│   │   └── footer.ejs
+│   ├── auth/
+│   │   ├── login.ejs
+│   │   └── register.ejs
+│   ├── dashboard.ejs       # Vista principal (resumen, alertas de pendientes)
+│   └── transactions.ejs    # Listado y formulario de ingresos/gastos
+│
+├── src/                    # O código fuente (o en la raíz si prefieres)
+│   ├── config/
+│   │   └── db.js           # Conexión a PostgreSQL
+│   ├── controllers/        # Lógica de negocio
+│   │   ├── authController.js
+│   │   └── transactionController.js
+│   ├── middlewares/        # Validar si el usuario está logueado
+│   │   └── authMiddleware.js
+│   └── routers/            # Rutas de Express
+│       ├── authRoutes.js
+│       └── transactionRoutes.js
+│
+├── .env                    # Variables de entorno (DB URL, secretos)
+├── .gitignore
+├── app.js                  # Archivo principal que arranca Express
+└── package.json
