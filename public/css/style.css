@@ -81,8 +81,10 @@ html, body {
 .dashboard-container {
     width: 92%;
     max-width: 900px;
+
     margin: 15px auto;
-    padding: 15px;
+
+    /* padding: 15px; */
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
@@ -343,7 +345,27 @@ td.expense { color: #dc3545; font-weight: bold; }
     align-items: center;
     gap: 10px;
 }
+/* Estilo para el cartel flotante de éxito */
+.toast-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-weight: bold;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
 
+.toast-alert.show {
+    opacity: 1;
+    transform: translateY(0);
+}
 /* Círculo estilo "avatar" con la inicial del usuario */
 .user-initial-badge {
     display: none; /* Oculto en PC porque en PC ya se muestra el mail entero */
@@ -426,8 +448,7 @@ details.collapsible-section[open] summary::after {
 @media (min-width: 768px) {
     .dashboard-container {
         max-width: 1100px; 
-        margin: 30px auto;
-        padding: 30px;
+        margin: 15px auto;
     }
     .summary-cards {
         flex-direction: row; 
@@ -438,6 +459,13 @@ details.collapsible-section[open] summary::after {
     .nav-user {
         display: inline; 
     }
+    .main-content {
+    padding: 0px 0;
+    margin-bottom: 0px;
+}
+element.style {
+    padding: 0px;
+}
 }
 
 /* Ajustes Responsivos para Celulares (max-width: 768px) */

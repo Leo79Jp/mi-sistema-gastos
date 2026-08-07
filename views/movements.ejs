@@ -1,0 +1,210 @@
+<%- include('partials/header') %>
+
+<div class="dashboard-container" style="max-width: 900px; margin: 0 auto; padding: 20px;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; ">
+        <h2>Gestión de Movimientos</h2>
+    </div>
+
+    <!-- Alertas de Fijos Pendientes -->
+    <% if (pendingExpenses && pendingExpenses.length > 0) { %>
+        <details class="collapsible-section">
+            <summary>
+                <span>⚠️ Movimientos Fijos Pendientes</span>
+                <span class="summary-badge">Tienes <%= pendingExpenses.length %> pendientes</span>
+            </summary>
+            <div style="margin-top: 15px;">
+                <div class="pending-list">
+                    <% pendingExpenses.forEach(expense => { %>
+                        <div class="pending-card" style="display: flex; flex-direction: column; gap: 12px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; background: #fff;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <strong style="font-size: 1rem;"><%= expense.title %></strong> 
+                                <span class="badge <%= expense.type === 'income' ? 'income' : 'expense' %>">
+                                    <%= expense.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>
+                                </span>
+                            </div>
+                            
+                            <form action="/movements/pay/<%= expense.id %>" method="POST" class="pending-form">
+                                <input type="number" step="1" name="amount" value="<%= (expense.amount && parseFloat(expense.amount) > 0) ? Math.round(expense.amount) : '' %>" placeholder="Monto real ($)" required class="pending-input">
+                                <button type="submit" class="btn-pay <%= expense.type === 'income' ? 'btn-income-pay' : 'btn-expense-pay' %>">
+                                    <%= expense.type === 'income' ? 'Confirmar Cobro' : 'Confirmar Pago' %>
+                                </button>
+                            </form>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </details>
+    <% } %>
+
+    <!-- Formulario de Nuevo Movimiento -->
+    <section class="form-section">
+        <h2>Nuevo Movimiento</h2>
+        <form action="/movements/add" method="POST" class="transaction-form">
+            <div class="form-row">
+                <input type="text" name="title" id="titleInput" placeholder="Concepto (ej: Supermercado)" required>
+                
+                <select name="fixed_template_title" id="fixedSelect" style="display: none;">
+                    <option value="">Selecciona tu fijo preconfigurado...</option>
+                    <% if (fixedTemplates && fixedTemplates.length > 0) { %>
+                        <% fixedTemplates.forEach(template => { %>
+                            <option value="<%= template.title %>" data-amount="<%= template.amount %>" data-type="<%= template.type %>">
+                                <%= template.title %> ($<%= template.amount %> - <%= template.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>)
+                            </option>
+                        <% }) %>
+                    <% } %>
+                </select>
+
+                <input type="number" step="0.01" name="amount" id="amountInput" placeholder="Monto ($)" required>
+                
+                <select name="type" id="typeSelect" required>
+                    <option value="expense">Gasto</option>
+                    <option value="income">Ingreso</option>
+                </select>
+            </div>
+
+            <div class="form-row options-row">
+                <label>
+                    <input type="checkbox" name="is_fixed" id="isFixedCheckbox"> Usar de la lista fija preconfigurada
+                </label>
+                <div id="dueDateContainer" style="display: none;">
+                    <input type="date" name="due_date">
+                </div>
+                <div>
+                    <input type="date" name="date" value="<%= new Date().toISOString().split('T')[0] %>" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Guardar Movimiento</button>
+        </form>
+    </section>
+                        <!-- Cartel flotante de éxito (oculto por defecto) -->
+            <div id="toastAlert" class="toast-alert">
+                ✅ ¡Movimiento agregado OK!
+            </div>
+
+    <!-- Listado de Movimientos del Mes -->
+    <details class="collapsible-section" >
+        <summary>
+            <span>📋 Movimientos del Mes</span>
+            <span class="summary-badge">Se registraron <%= transactions.length %> movimientos</span>
+        </summary>
+        <div style="margin-top: 15px;">
+            <% if (transactions && transactions.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Concepto</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% transactions.forEach(t => { %>
+                                <tr>
+                                    <td><%= new Date(t.date).toLocaleDateString() %></td>
+                                    <td><%= t.title %></td>
+                                    <td><span class="badge <%= t.type %>"><%= t.type === 'income' ? 'Ingreso' : 'Gasto' %></span></td>
+                                    <td class="<%= t.type %>">
+                                        <%= (t.amount !== null && !isNaN(t.amount)) ? '$' + Math.round(t.amount) : 'Pendiente de monto' %>
+                                    </td>
+                                    <td>
+                                        <% if (t.status === 'pending') { %>
+                                            <span class="badge-fixed pending">Pendiente</span>
+                                        <% } else { %>
+                                            <span class="badge-fixed paid">
+                                                <%= t.type === 'income' ? 'Cobrado' : 'Pagado' %>
+                                            </span>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <form action="/movements/delete/<%= t.id %>" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn-delete" onclick="return confirm('¿Borrar?')">🗑️</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="no-data" style="margin-top: 10px;">No hay movimientos este mes.</p>
+            <% } %>
+        </div>
+    </details>
+</div>
+
+<script>
+    const typeSelect = document.getElementById('typeSelect');
+    const isFixedCheckbox = document.getElementById('isFixedCheckbox');
+    const titleInput = document.getElementById('titleInput');
+    const fixedSelect = document.getElementById('fixedSelect');
+    const amountInput = document.getElementById('amountInput');
+
+    function updateOptions() {
+        if (isFixedCheckbox.checked) {
+            titleInput.style.display = 'none';
+            titleInput.removeAttribute('required');
+            fixedSelect.style.display = 'block';
+            fixedSelect.setAttribute('required', 'true');
+        } else {
+            titleInput.style.display = 'block';
+            titleInput.setAttribute('required', 'true');
+            fixedSelect.style.display = 'none';
+            fixedSelect.removeAttribute('required');
+            fixedSelect.value = '';
+        }
+    }
+
+    fixedSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const templateAmount = selectedOption.getAttribute('data-amount');
+            const templateType = selectedOption.getAttribute('data-type');
+            if (templateAmount) amountInput.value = templateAmount;
+            if (templateType) typeSelect.value = templateType;
+        }
+    });
+
+    if (isFixedCheckbox) {
+        isFixedCheckbox.addEventListener('change', updateOptions);
+    }
+
+    // Mantener el foco en el input del título al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+        const titleInput = document.getElementById('titleInput');
+        const fixedSelect = document.getElementById('fixedSelect');
+        const isFixedCheckbox = document.getElementById('isFixedCheckbox');
+
+        // Si el checkbox está marcado, enfocamos el selector; si no, el input de texto
+        if (isFixedCheckbox && isFixedCheckbox.checked) {
+            fixedSelect.focus();
+        } else if (titleInput) {
+            titleInput.focus();
+        }
+    });
+    // Detectar si la URL tiene ?success=true para mostrar el cartelito y luego limpiarla
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            const toast = document.getElementById('toastAlert');
+            if (toast) {
+                toast.classList.add('show');
+
+                // Hacer que desapachezca solo a los 2.5 segundos
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2500);
+
+                // Limpiar la URL para que si recarga de nuevo no vuelva a saltar el cartel
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+    });
+</script>
+
+<%- include('partials/footer') %>

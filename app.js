@@ -12,7 +12,8 @@ const authRoutes = require('./src/routers/authRoutes');
 const transactionRoutes = require('./src/routers/transactionRoutes');
 // Importar rutas de gestión de gastos fijos
 const fixedRoutes = require('./src/routers/fixedRoutes');
-
+// Arriba con tus otras importaciones de rutas
+const movementsRoutes = require('./src/routers/movementsRoutes');
 
 // Configurar motor de vistas EJS
 app.set('view engine', 'ejs');
@@ -45,7 +46,8 @@ app.use('/auth', authRoutes);
 app.use('/dashboard', transactionRoutes);
 // Usar rutas (puedes ponerlo que responda en /fixed-expenses)
 app.use('/fixed-expenses', fixedRoutes);
-
+// Más abajo, donde configuras las rutas de la app:
+app.use('/movements', movementsRoutes);
 
 // Redirigir la raíz '/' al dashboard (si está logueado) o al login
 app.get('/', (req, res) => {
