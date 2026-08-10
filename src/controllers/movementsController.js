@@ -1,5 +1,4 @@
 const pool = require('../config/db');
-
 exports.getMovementsPage = async (req, res) => {
     const userId = req.session.userId;
     const currentDate = new Date();
@@ -23,25 +22,17 @@ exports.getMovementsPage = async (req, res) => {
             [userId]
         );
 
-        // // 3. Obtener transacciones del mes
-        // const transactionsQuery = `
-        //     SELECT * FROM transactions 
-        //     WHERE user_id = $1 
-        //         AND EXTRACT(MONTH FROM date) = $2 
-        //         AND EXTRACT(YEAR FROM date) = $3
-        //     ORDER BY date DESC;
-        // `;
-        // const transactionsResult = await pool.query(transactionsQuery, [userId, month, year]);
-// 3. Obtener transacciones del mes (SOLO las que ya están pagadas/cobradas)
+        // 3. Obtener transacciones del mes (SOLO las que ya están pagadas/cobradas)
         const transactionsQuery = `
             SELECT * FROM transactions 
             WHERE user_id = $1 
                 AND status != 'pending'
                 AND EXTRACT(MONTH FROM date) = $2 
                 AND EXTRACT(YEAR FROM date) = $3
-            ORDER BY date DESC;
+            ORDER BY date DESC, id DESC;
         `;
         const transactionsResult = await pool.query(transactionsQuery, [userId, month, year]);
+        
         res.render('movements', {
             email: req.session.email,
             pendingExpenses: pendingResult.rows,

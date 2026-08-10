@@ -455,10 +455,22 @@ details.collapsible-section[open] summary::after {
         display: flex; /* Se muestra al entrar en modo celular */
     }
         .dashboard-container {
-        padding: 5px 15px !important;
+        padding: 0px 15px !important;
+       margin-block : 0px;
+
     }
 .chart-section div{
     height: 270px !important;
+    padding: 0px !important;
+}
+.form-section{
+    margin-bottom:0px;
+}
+.form-section h2{
+    margin: 0px;
+    text-align: center;
+    color: #333;
+}
 }
 
 /* --- Corrección de márgenes laterales para Login / Registro en Móvil --- */
@@ -469,7 +481,7 @@ details.collapsible-section[open] summary::after {
         padding: 20px; /* Opcional: ajusta un poco el padding interno si lo deseas */
     }
 }
-}
+
 /* Media Queries para PC (Pantallas Grandes) */
 @media (min-width: 768px) {
     .dashboard-container {
