@@ -10,24 +10,24 @@
     </div> -->
 
     <!-- Tarjetas de Resumen -->
-    <section class="summary-cards">
+<section class="summary-cards">
         <div class="card income">
-            <h3>Ingresos</h3>
+            <span class="card-label">Ingresos</span>
             <p>$<%= Math.round(totals.totalIncome) %></p>
         </div>
         <div class="card expense">
-            <h3>Gastos</h3>
+            <span class="card-label">Gastos</span>
             <p>$<%= Math.round(totals.totalExpense) %></p>
         </div>
         <div class="card balance <%= totals.balance >= 0 ? 'positive' : 'negative' %>">
-            <h3>Balance</h3>
+            <span class="card-label">Balance</span>
             <p>$<%= Math.round(totals.balance) %></p>
         </div>
     </section>
 
     <!-- Gráfico de Evolución -->
     <section class="chart-section" style="background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 0px; border: 1px solid #eee;">
-        <h3 style="margin-top: 0; font-size: 16px; color: #444; text-align: center;">Evolución Financiera (Últimos Meses)</h3>
+        <h3 style="margin-top: 0; font-size: 16px; color: #444; text-align: center;">Evolución Financiera (6 Meses)</h3>
         <div style="position: relative; height: 300px; width: 100%;">
             <canvas id="financeChart" 
                 data-labels="<%= JSON.stringify(chart.labels) %>"

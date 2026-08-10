@@ -10,8 +10,8 @@
     <% if (pendingExpenses && pendingExpenses.length > 0) { %>
         <details class="collapsible-section">
             <summary>
-                <span>⚠️ Movimientos Fijos Pendientes</span>
-                <span class="summary-badge">Tienes <%= pendingExpenses.length %> pendientes</span>
+                <span>⚠️ Fijos Pendientes</span>
+                <span class="summary-badge"><%= pendingExpenses.length %> </span>
             </summary>
             <div style="margin-top: 15px;">
                 <div class="pending-list">
@@ -86,8 +86,8 @@
     <!-- Listado de Movimientos del Mes -->
     <details class="collapsible-section" >
         <summary>
-            <span>📋 Movimientos del Mes</span>
-            <span class="summary-badge">Se registraron <%= transactions.length %> movimientos</span>
+            <span>📋 Pagos - Cobros</span>
+            <span class="summary-badge"> <%= transactions.length %> </span>
         </summary>
         <div style="margin-top: 15px;">
             <% if (transactions && transactions.length > 0) { %>

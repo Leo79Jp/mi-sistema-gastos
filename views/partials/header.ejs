@@ -49,16 +49,26 @@
 </nav>
 
 <!-- Script mejorado para abrir y cerrar el menú hamburguesa en celular y PC -->
-<script>
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const navLinks = document.getElementById('navLinks');
 
-    if (hamburgerBtn && navLinks) {
-        hamburgerBtn.onclick = function() {
-            navLinks.classList.toggle('active');
-            console.log('Menú presionado'); // Si estás conectado por USB depurando, lo ves en la consola
-        };
-    }
+<script>
+    (function() {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        if (hamburgerBtn && navLinks) {
+            hamburgerBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // Cerrar menú al hacer clic en cualquier opción del menú
+            const navItems = navLinks.querySelectorAll('a');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
+        }
+    })();
 </script>
 
     <!-- Contenedor Principal -->

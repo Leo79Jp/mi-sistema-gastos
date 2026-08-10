@@ -437,12 +437,38 @@ details.collapsible-section[open] summary::after {
     width: 100% !important;
     box-sizing: border-box !important;
 }
+/* --- Solución definitiva para el botón hamburguesa --- */
+.nav-right-mobile {
+    position: relative;
+    z-index: 9999; /* Lo pone por encima de cualquier otra capa */
+}
 
+.hamburger-btn {
+    position: relative;
+    z-index: 10000;
+    cursor: pointer;
+    pointer-events: auto !important; /* Fuerza a que reciba clics siempre */
+}
 /* Solo se muestra en pantallas chicas (celulares) */
 @media (max-width: 768px) {
     .user-initial-badge {
         display: flex; /* Se muestra al entrar en modo celular */
     }
+        .dashboard-container {
+        padding: 5px 15px !important;
+    }
+.chart-section div{
+    height: 270px !important;
+}
+
+/* --- Corrección de márgenes laterales para Login / Registro en Móvil --- */
+@media (max-width: 480px) {
+    .auth-container {
+        width: 90% !important;
+        margin: 0 auto;
+        padding: 20px; /* Opcional: ajusta un poco el padding interno si lo deseas */
+    }
+}
 }
 /* Media Queries para PC (Pantallas Grandes) */
 @media (min-width: 768px) {
@@ -463,9 +489,7 @@ details.collapsible-section[open] summary::after {
     padding: 0px 0;
     margin-bottom: 0px;
 }
-element.style {
-    padding: 0px;
-}
+
 }
 
 /* Ajustes Responsivos para Celulares (max-width: 768px) */
@@ -545,5 +569,54 @@ element.style {
     
     .pending-input, .btn-pay {
         width: 100%;
+    }
+}
+
+/* Estilo por defecto para celular: Fila (label y monto en una línea) */
+.summary-cards .card {
+    display: flex;
+    flex-direction: row; /* Pone los elementos lado a lado en celular */
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+}
+
+.summary-cards .card .card-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.summary-cards .card p {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* Estilo para PC / pantallas grandes (Sobrescribe a columna, como lo tenías antes) */
+@media (min-width: 768px) {
+    .summary-cards {
+        display: flex;
+        gap: 15px;
+    }
+
+    .summary-cards .card {
+        flex-direction: column; /* Vuelve a apilar: título arriba, monto abajo */
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        flex: 1;
+        padding: 20px;
+    }
+
+    .summary-cards .card .card-label {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        color: inherit; /* Hereda el color original de la tarjeta si lo usas */
+    }
+
+    .summary-cards .card p {
+        font-size: 1.5rem; /* El tamaño de número grande que tenías en PC */
     }
 }

@@ -22,47 +22,56 @@
         </form>
     </section>
 
-    <section class="transactions-section">
-        <h2>Movimientos Fijos Activos</h2>
-        <% if (fixedExpenses && fixedExpenses.length > 0) { %>
-            <div class="table-responsive">
-                <table class="transactions-table">
-                    <thead>
-                        <tr>
-                            <th>Concepto</th>
-                            <th>Tipo</th>
-                            <th>Monto</th>
-                            <th>Vencimiento / Aplicación</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% fixedExpenses.forEach(item => { %>
+<section class="transactions-section">
+    <% if (fixedExpenses && fixedExpenses.length > 0) { %>
+        <details class="collapsible-section">
+            <summary>
+                <span>📌 Fijos Activos</span>
+                <span class="summary-badge"><%= fixedExpenses.length %></span>
+            </summary>
+            <div style="margin-top: 15px;">
+                <div class="table-responsive">
+                    <table class="transactions-table">
+                        <thead>
                             <tr>
-                                <td><%= item.title %></td>
-                                <td>
-                                    <span class="badge <%= item.type === 'income' ? 'income' : 'expense' %>">
-                                        <%= item.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>
-                                    </span>
-                                </td>
-                                <td class="<%= item.type === 'income' ? 'income' : 'expense' %>">
-                                    $<%= parseFloat(item.amount).toFixed(0) %>
-                                </td>
-                                <td>Día <%= item.due_day %> del mes</td>
-                                <td>
-                                    <form action="/fixed-expenses/delete/<%= item.id %>" method="POST" style="display:inline;">
-                                        <button type="submit" class="btn-delete" onclick="return confirm('¿Borrar?')">🗑️</button>
-                                    </form>
-                                </td>
+                                <th>Concepto</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Vencimiento / Aplicación</th>
+                                <th>Acción</th>
                             </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <% fixedExpenses.forEach(item => { %>
+                                <tr>
+                                    <td><%= item.title %></td>
+                                    <td>
+                                        <span class="badge <%= item.type === 'income' ? 'income' : 'expense' %>">
+                                            <%= item.type === 'income' ? 'Ingreso Fijo' : 'Gasto Fijo' %>
+                                        </span>
+                                    </td>
+                                    <td class="<%= item.type === 'income' ? 'income' : 'expense' %>">
+                                        $<%= parseFloat(item.amount).toFixed(0) %>
+                                    </td>
+                                    <td>Día <%= item.due_day %> del mes</td>
+                                    <td>
+                                        <form action="/fixed-expenses/delete/<%= item.id %>" method="POST" style="display:inline;">
+                                            <button type="submit" class="btn-delete" onclick="return confirm('¿Borrar?')">🗑️</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        <% } else { %>
-            <p class="no-data">No hay movimientos fijos configurados.</p>
-        <% } %>
-    </section>
+        </details>
+    <% } else { %>
+        <h2>Movimientos Fijos Activos</h2>
+        <p class="no-data">No hay movimientos fijos configurados.</p>
+    <% } %>
+</section>
+
 </div>
 
 <%- include('partials/footer') %>

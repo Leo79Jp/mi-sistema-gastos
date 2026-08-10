@@ -2,10 +2,18 @@ const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 
 // Mostrar vista de Login
+// exports.getLogin = (req, res) => {
+//   res.render('auth/login', { error: null });
+// };
 exports.getLogin = (req, res) => {
-  res.render('auth/login', { error: null });
+    // Verificamos si estamos en local y si existen las variables en el .env
+    const isLocal = process.env.NODE_ENV !== 'production'; // O puedes usar una variable propia
+    
+    res.render('auth/login', {
+        defaultEmail: (isLocal && process.env.DEV_EMAIL) ? process.env.DEV_EMAIL : '',
+        defaultPassword: (isLocal && process.env.DEV_PASSWORD) ? process.env.DEV_PASSWORD : ''
+    });
 };
-
 // Mostrar vista de Registro
 exports.getRegister = (req, res) => {
   res.render('auth/register', { error: null });
