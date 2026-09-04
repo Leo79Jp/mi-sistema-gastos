@@ -46,17 +46,19 @@
             <a href="/auth/logout" class="btn-logout">Salir</a>
         <% } %>
     </div>
+    
 </nav>
 
 <!-- Script mejorado para abrir y cerrar el menú hamburguesa en celular y PC -->
 
 <script>
-    (function() {
+    document.addEventListener("DOMContentLoaded", () => {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const navLinks = document.getElementById('navLinks');
 
         if (hamburgerBtn && navLinks) {
-            hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 navLinks.classList.toggle('active');
             });
 
@@ -67,8 +69,15 @@
                     navLinks.classList.remove('active');
                 });
             });
+
+            // Cerrar menú si se hace clic fuera de él en pantallas pequeñas
+            document.addEventListener('click', (e) => {
+                if (!navLinks.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                }
+            });
         }
-    })();
+    });
 </script>
 
     <!-- Contenedor Principal -->
