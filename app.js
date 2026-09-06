@@ -1,6 +1,8 @@
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
+const pool = require('./src/config/db'); // Tu archivo de conexión a la BD
 require('dotenv').config();
 
 const app = express();
@@ -26,15 +28,24 @@ app.use(express.json());
 // Archivos estáticos (CSS, JS del cliente)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configuración de sesiones
+// NECESARIO en Vercel para que reconozca las cookies seguras tras el proxy
+app.set('trust proxy', 1);
+
+// Configuración de sesiones persistente
 app.use(
   session({
+    store: new pgSession({
+      pool: pool,                // Conexión a tu base de datos PostgreSQL
+      tableName: 'session',      // Nombre de la tabla donde se guardarán las sesiones
+      createTableIfMissing: true // Crea la tabla automáticamente si no existe
+    }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { 
-      secure: false, // Cambiar a true si usas HTTPS en producción
-      maxAge: 1000 * 60 * 60 * 24 // Duración de la sesión: 1 día
+      secure: process.env.NODE_ENV === 'production', // true en Vercel (porque usa HTTPS)
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 // 1 día
     }
   })
 );
