@@ -22,10 +22,14 @@ exports.getMovementsPage = async (req, res) => {
             [userId]
         );
 
-// 3. Obtener transacciones del mes (Muestra todos los movimientos de ese mes sin importar el estado)
+// 3. Obtener transacciones del mes: 
+        // - Solo del mes y año seleccionados ($2 y $3)
+        // - Que NO estén pendientes (status = 'paid' o el estado que uses al pagar), 
+        //   para que los pendientes se queden únicamente en su sección de arriba.
         const transactionsQuery = `
             SELECT * FROM transactions 
             WHERE user_id = $1 
+                AND status = 'paid'
                 AND EXTRACT(MONTH FROM date) = $2 
                 AND EXTRACT(YEAR FROM date) = $3
             ORDER BY date DESC, id DESC;
